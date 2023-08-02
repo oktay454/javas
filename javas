@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "${XDG_SESSION_TYPE}" == "x11" ] || [ "${XDG_SESSION_TYPE}" == "wayland" ] && [ "$(which yad)" ]
+then
+	GUI="true"
+else
+	GUI="false"
+fi
+
+if test -z "${*}" && [ "${GUI}" == "true" ]
+then
+	ALL_ARGUMENTS="$(yad --file)"
+	test -z "${ALL_ARGUMENTS}" && exit 2
+elif test -n "${*}"
+then
+	ALL_ARGUMENTS="${*}"
+else
+	exit 2
+fi
+
+test -z "$(which java)" && exit 1
+
+java -jar "${ALL_ARGUMENTS}"

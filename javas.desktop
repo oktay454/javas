@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Java File Starter
+GenericName=Java Archive File Starter
+GenericName[tr]=Java Arşiv Dosyası Başlatıcı
+Comment=Java JAR File Starter
+Comment[tr]=Java JAR Dosyası Başlatıcı
+Exec=/usr/local/bin/javas %u
+#Icon=application-java
+Icon=/usr/share/icons/Papirus/64x64/apps/java.svg
+Terminal=false
+Type=Application
+NoDisplay=false
+Categories=Application;
+MimeType=application/java-archive;application/x-java-archive;application/x-jar;
