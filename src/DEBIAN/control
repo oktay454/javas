@@ -1,0 +1,9 @@
+Package: javas
+Version: 1.0.0
+Installed-Size: 52
+Priority: optional
+Architecture: all
+Maintainer: Kemal Oktay Aktoğan (oktay@e.email)
+Depends: default-jre|default-jdk, yad, findutils, sed
+Date: Thu Sep 28 00:33:43 +03 2023
+Description:  Java JAR File Starter 
