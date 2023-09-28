@@ -1,5 +1,8 @@
 #!/bin/bash
 
+JVM_PATH="/usr/lib/jvm"
+command -v java > /dev/null || exit 1
+
 if [ "${XDG_SESSION_TYPE}" == "x11" ] || [ "${XDG_SESSION_TYPE}" == "wayland" ] && [ "$(which yad)" ]
 then
 	GUI="true"
@@ -7,8 +10,9 @@ else
 	GUI="false"
 fi
 
-if test -z "${*}" && [ "${GUI}" == "true" ]
+if test -z "${*}" && test -d "${JVM_PATH}" && [ "${GUI}" == "true" ]
 then
+	# Selecting JAR file
 	ALL_ARGUMENTS="$(yad \
 		--center \
 		--width=700 \
@@ -17,20 +21,10 @@ then
 		--file-filter="Java Arşiv Dosyası (JAR)|*.jar" \
 		--title "JAR Dosyası Seçiniz")"
 	test -z "${ALL_ARGUMENTS}" && exit 2
-elif test -n "${*}"
-then
-	ALL_ARGUMENTS="${*}"
-else
-	exit 2
-fi
 
-test -z "$(which java)" && exit 1
-JVM_PATH="/usr/lib/jvm"
-
-if test -d "${JVM_PATH}" && [ "${GUI}" == "true" ]
-then
+	# Selecting Java version
 	ALL_JVM="$(find "${JVM_PATH}" -maxdepth 1 -mindepth 1 -type d | sed "s~${JVM_PATH}/~~g")"
-	test -z "${ALL_JVM}" && break
+	test -z "${ALL_JVM}" && return 1
 	SELECTED_JVM="$(yad \
 		--center \
 		--width=400 \
@@ -38,10 +32,14 @@ then
 		--title "Java Sürümü Seçiniz" \
 		--text "Lütfen aşağıdaki Java sürümlerinden  birini seçin:" \
 		--list --column "Kurulu Java Sürümleri" \
-		$(for ANOTHER_JVM in "${ALL_JVM[*]}"; do echo "${ANOTHER_JVM}"; done))"
-
+		$(for ANOTHER_JVM in ${ALL_JVM[*]}; do echo "${ANOTHER_JVM}"; done))"
 	export JAVA_HOME="${JVM_PATH}/${SELECTED_JVM}"
 	export PATH=${JAVA_HOME}/bin:${PATH}
+elif test -n "${*}"
+then
+	ALL_ARGUMENTS="${*}"
+else
+	exit 2
 fi
 
 java -jar "${ALL_ARGUMENTS}"
